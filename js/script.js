@@ -19,13 +19,14 @@ const dots = [...document.querySelectorAll('.dots span')];
 
 //Implementation
 const changeSlide = () => {
-    // active++;
+    active++;
     if (active === slideList.length) {
         active = 0;
     }
     image.src = slideList[active].img;
     h1.textContent = slideList[active].text;
     changeDot();
+
 };
 
 const changeDot = () => {
@@ -34,19 +35,22 @@ const changeDot = () => {
     dots[active].classList.add('active');
 };
 
-setInterval(changeSlide, time);
+let indexInterval = setInterval(changeSlide, time);
 
-const keyChangeSlide = () => {
-    let keyCode = event.keyCode;
-    console.log(keyCode);
-    if (keyCode === 37) {
-        (active === 0) ? active = slideList.length - 1: active--;
-        console.log(active);
+const keyChangeSlide = (e) => {
+    if (e.keyCode == 37 || e.keyCode == 39) {
+        clearInterval(indexInterval);
+        e.keyCode == 37 ? active-- : active++;
+        if (active === slideList.length) {
+            active = 0;
+        } else if (active < 0) {
+            active = slideList.length - 1;
+        };
+        image.src = slideList[active].img;
+        h1.textContent = slideList[active].text;
+        changeDot();
+        indexInterval = setInterval(changeSlide, time);
     };
-    if (keyCode === 39) {
-        (active === slideList.length) ? active = 0: active++;
-    }
-    changeSlide();
 };
 
 window.addEventListener('keydown', keyChangeSlide);
